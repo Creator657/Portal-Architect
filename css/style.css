@@ -396,3 +396,24 @@ button:hover {
     margin-bottom: 20px;
 
 }
+
+.portal-info{
+
+    font-size:11px;
+
+    text-align:center;
+
+    line-height:15px;
+
+}
+
+
+.dimension{
+
+    color:#ffd54a;
+
+    font-weight:bold;
+
+    margin-top:5px;
+
+}
