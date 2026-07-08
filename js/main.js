@@ -19,9 +19,9 @@ button.addEventListener("click", function(){
     );
 
 
-    const netherX = Math.floor(overworldX / 8);
+    const netherX = Math.round(overworldX / 8);
 
-    const netherZ = Math.floor(overworldZ / 8);
+    const netherZ = Math.round(overworldZ / 8);
 
 
 
@@ -58,8 +58,8 @@ for (let z = radius; z >= -radius; z--) {
 const portalNetherX = netherX + (x * 35);
 const portalNetherZ = netherZ + (z * 40);
 
-const portalOverworldX = portalNetherX * 8;
-const portalOverworldZ = portalNetherZ * 8;
+const portalOverworldX = Math.round(portalNetherX * 8);
+const portalOverworldZ = Math.round(portalNetherZ * 8);
         
     card.innerHTML = `
 <div class="portal-frame">
