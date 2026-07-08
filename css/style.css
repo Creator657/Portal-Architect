@@ -355,3 +355,13 @@ button:hover {
     line-height:16px;
 
 }
+
+#results {
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    padding: 30px;
+
+}
