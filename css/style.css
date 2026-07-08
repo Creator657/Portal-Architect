@@ -258,4 +258,39 @@ button:hover {
 
     border-radius: 15px;
 
-}
+.portal-result {
+
+    margin-top: 20px;
+
+    padding: 15px;
+
+    background: rgba(
+        0,
+        0,
+        0,
+        0.35
+    );
+
+
+    border:
+
+        1px solid
+
+        #c86cff;
+
+
+    border-radius: 12px;
+
+
+    box-shadow:
+
+        0 0 12px
+
+        rgba(
+            200,
+            108,
+            255,
+            .4
+        );
+
+}}
