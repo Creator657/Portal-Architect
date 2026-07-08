@@ -365,3 +365,34 @@ button:hover {
     padding: 30px;
 
 }
+ html, body {
+    overflow-x: auto;
+}
+
+#results {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    display: block;
+
+    padding: 30px;
+
+}
+
+.portal-row {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 20px;
+
+    width: max-content;
+
+    margin-bottom: 20px;
+
+}
