@@ -10,11 +10,14 @@ body {
     min-height: 100vh;
 
     background:
-        linear-gradient(
-            135deg,
-            #3A0CA3,
-            #630000
-        );
+        background: linear-gradient(
+    180deg,
+    #050303 0%,   
+    #1f0505 30%,  
+    #5c0d0d 65%,  
+    #b01c1c 85%,  
+    #ff6200 100% 
+  );
 
     color: #ffffff;
 
