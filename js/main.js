@@ -61,7 +61,7 @@ const portalOverworldZ = overworldZ + (z * 40);
 const portalNetherX = Math.floor(portalOverworldX / 8);
 const portalNetherZ = Math.floor(portalOverworldZ / 8);
         
-        card.innerHTML = `
+    card.innerHTML = `
 <div class="portal-frame">
 
     <div class="portal-center">
@@ -72,11 +72,25 @@ const portalNetherZ = Math.floor(portalOverworldZ / 8);
 
         <div class="portal-coords">
 
-            X: ---
+            OW
+            <br>
+
+            X: ${portalOverworldX}
 
             <br>
 
-            Z: ---
+            Z: ${portalOverworldZ}
+
+            <br><br>
+
+            N
+            <br>
+
+            X: ${portalNetherX}
+
+            <br>
+
+            Z: ${portalNetherZ}
 
         </div>
 
