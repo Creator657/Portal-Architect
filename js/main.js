@@ -55,11 +55,11 @@ for (let z = radius; z >= -radius; z--) {
 
         }
 
-        const portalOverworldX = overworldX + (x * 35);
-const portalOverworldZ = overworldZ + (z * 40);
+const portalNetherX = netherX + (x * 35);
+const portalNetherZ = netherZ + (z * 40);
 
-const portalNetherX = Math.floor(portalOverworldX / 8);
-const portalNetherZ = Math.floor(portalOverworldZ / 8);
+const portalOverworldX = portalNetherX * 8;
+const portalOverworldZ = portalNetherZ * 8;
         
     card.innerHTML = `
 <div class="portal-frame">
