@@ -8,7 +8,7 @@
 
 <title>Portal Architect</title>
 
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -47,13 +47,14 @@ Overworld Z
 Grid Radius
 </label>
 
-<input id="radius" type="number" value="2" min="1">
+<input id="radius" type="number" value="2" min="1" max="15" step="1">
 
 
 <button id="generateBtn">
 Generate Grid
 </button>
 
+<p id="formError" style="color:#ff8a8a; font-size:14px; margin-top:10px;"></p>
 
 </section>
 
@@ -72,7 +73,7 @@ Generate Grid
 </main>
 
 
-<script src="js/main.js"></script>
+<script src="main.js"></script>
 
 </body>
 
