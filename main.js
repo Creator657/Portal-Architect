@@ -100,6 +100,7 @@ button.addEventListener("click", function () {
 
             if (isCenter) {
                 name = "★★★";
+                card.classList.add("mother-portal");
             } else {
                 if (z > 0) name += "N" + z;
                 if (z < 0) name += "S" + Math.abs(z);
