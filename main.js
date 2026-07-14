@@ -1,5 +1,30 @@
 console.log("Portal Architect loaded");
 
+const commitFooter = document.getElementById("commitFooter");
+
+fetch("https://api.github.com/repos/Creator657/Portal-Architect/commits?per_page=1")
+    .then(function (response) {
+        const linkHeader = response.headers.get("Link");
+        let commitCount = null;
+
+        if (linkHeader) {
+            const match = linkHeader.match(/[?&]page=(\d+)>;\s*rel="last"/);
+            if (match) {
+                commitCount = Number(match[1]);
+            }
+        } else if (response.ok) {
+            // No Link header means there's only one page of results, i.e. one commit.
+            commitCount = 1;
+        }
+
+        if (commitCount !== null) {
+            commitFooter.textContent = commitCount + (commitCount === 1 ? " commit" : " commits") + " so far";
+        }
+    })
+    .catch(function () {
+        // Fail silently, the footer just stays empty if the API is unreachable or rate-limited.
+    });
+
 const button = document.getElementById("generateBtn");
 const errorEl = document.getElementById("formError");
 const noticeEl = document.getElementById("radiusNotice");
