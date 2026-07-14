@@ -176,6 +176,7 @@ button:hover {
     background: linear-gradient(120deg, transparent, rgba(200, 108, 255, .25), transparent);
     animation: portal-shimmer 4s ease-in-out infinite;
     pointer-events: none;
+    z-index: 1;
 }
 
 @keyframes portal-shimmer {
@@ -202,7 +203,7 @@ button:hover {
 .portal-center {
     width: 100px;
     height: 180px;
-    background: #7b2cff;
+    background: #4b0f8a;
     border-radius: 3px;
     display: flex;
     flex-direction: column;
@@ -210,19 +211,41 @@ button:hover {
     align-items: center;
     padding-top: 12px;
     color: white;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+}
+
+.portal-center::before {
+    content: "";
+    position: absolute;
+    inset: -25%;
+    background: conic-gradient(from 0deg, #7b2cff, #c86cff, #4b0f8a, #9b4dff, #d68cff, #7b2cff);
+    filter: blur(5px);
+    animation: portal-swirl 7s linear infinite;
+}
+
+@keyframes portal-swirl {
+    to { transform: rotate(360deg); }
 }
 
 .portal-name {
+    position: relative;
+    z-index: 1;
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 12px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, .85);
 }
 
 .portal-coords {
+    position: relative;
+    z-index: 1;
     margin-top: 10px;
     font-size: 12px;
     text-align: center;
     line-height: 16px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .85);
 }
 
 .portal-info {
