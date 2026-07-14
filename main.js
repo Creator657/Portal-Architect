@@ -46,7 +46,11 @@ Promise.all([
             throw new Error("Could not parse commit or deployment count");
         }
 
-        commitFooter.textContent = commitCount + "·" + deploymentCount;
+        const timestamp = Date.now().toString(36);
+        commitFooter.textContent = "PA-" + timestamp +
+            "-C" + commitCount +
+            "-D" + deploymentCount +
+            "-R" + (debugRateRemaining !== null ? debugRateRemaining : "NA");
         commitFooter.style.color = "#8a6fa8";
     })
     .catch(function (err) {
