@@ -216,15 +216,18 @@ button:hover {
 .portal-center::before {
     content: "";
     position: absolute;
-    inset: -30%;
-    background: repeating-radial-gradient(
-        circle at 50% 50%,
-        #4b0f8a 0 8px,
-        #7b2cff 8px 16px,
-        #9b4dff 16px 22px,
-        #c86cff 22px 28px
-    );
-    animation: portal-swirl 9s linear infinite;
+    inset: -10%;
+    background-image:
+        radial-gradient(circle at 50% 50%,
+            #d68cff 0 4px,
+            #9b4dff 4px 9px,
+            #7b2cff 9px 14px,
+            #4b0f8a 14px 19px,
+            transparent 19px 21px);
+    background-size: 60px 54px;
+    background-repeat: repeat;
+    animation: portal-swirl 10s linear infinite;
+    transform-origin: center;
 }
 
 @keyframes portal-swirl {
