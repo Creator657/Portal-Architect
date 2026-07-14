@@ -150,14 +150,11 @@ button:hover {
 .portal-frame {
     width: 140px;
     height: 220px;
-    background:
-        radial-gradient(circle at 22% 28%, rgba(0, 0, 0, .65) 0%, transparent 42%),
-        radial-gradient(circle at 72% 62%, rgba(0, 0, 0, .55) 0%, transparent 38%),
-        radial-gradient(circle at 40% 82%, rgba(0, 0, 0, .6) 0%, transparent 32%),
-        radial-gradient(circle at 85% 20%, rgba(60, 20, 90, .4) 0%, transparent 30%),
-        #1b1026;
+    background-image:
+        repeating-linear-gradient(45deg, #0d0714 0 6px, #1b1026 6px 12px),
+        repeating-linear-gradient(-45deg, rgba(60, 20, 90, .35) 0 4px, transparent 4px 10px);
     border: 8px solid #0d0714;
-    border-radius: 8px;
+    border-radius: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -219,10 +216,15 @@ button:hover {
 .portal-center::before {
     content: "";
     position: absolute;
-    inset: -25%;
-    background: conic-gradient(from 0deg, #7b2cff, #c86cff, #4b0f8a, #9b4dff, #d68cff, #7b2cff);
-    filter: blur(5px);
-    animation: portal-swirl 7s linear infinite;
+    inset: -30%;
+    background: repeating-radial-gradient(
+        circle at 50% 50%,
+        #4b0f8a 0 8px,
+        #7b2cff 8px 16px,
+        #9b4dff 16px 22px,
+        #c86cff 22px 28px
+    );
+    animation: portal-swirl 9s linear infinite;
 }
 
 @keyframes portal-swirl {
