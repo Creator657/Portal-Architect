@@ -47,7 +47,7 @@ Promise.all([
         }
 
         const timestamp = Date.now().toString(36);
-        commitFooter.textContent = "PA-" + timestamp +
+        commitFooter.textContent = "debug ID: PA-" + timestamp +
             "-C" + commitCount +
             "-D" + deploymentCount +
             "-R" + (debugRateRemaining !== null ? debugRateRemaining : "NA");
