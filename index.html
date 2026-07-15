@@ -68,6 +68,54 @@ Generate Grid
 </section>
 
 
+<section class="card tools-card">
+
+<h2>Tools</h2>
+
+<div class="tool-block">
+<h3>Search Portal by Name</h3>
+<input id="searchNameInput" type="text" placeholder="e.g. N3E2 or ★★★">
+<button id="searchNameBtn" type="button">Find</button>
+<p id="searchStatus" class="tool-status"></p>
+</div>
+
+<div class="tool-block">
+<h3>Highlight Nearest Portal</h3>
+<p class="tool-hint">Finds the closest portal already in the current grid.</p>
+<input id="nearestX" type="number" placeholder="Overworld X">
+<input id="nearestZ" type="number" placeholder="Overworld Z">
+<button id="nearestBtn" type="button">Highlight Nearest</button>
+<p id="nearestStatus" class="tool-status"></p>
+</div>
+
+<div class="tool-block">
+<h3>Distance Calculator</h3>
+<div class="coord-pair">
+<input id="distX1" type="number" placeholder="Point A: X">
+<input id="distZ1" type="number" placeholder="Point A: Z">
+</div>
+<div class="coord-pair">
+<input id="distX2" type="number" placeholder="Point B: X">
+<input id="distZ2" type="number" placeholder="Point B: Z">
+</div>
+<button id="distBtn" type="button">Calculate Distance</button>
+<p id="distStatus" class="tool-status"></p>
+<div id="distResult" class="tool-result"></div>
+</div>
+
+<div class="tool-block">
+<h3>Find Nearest Portal Slot</h3>
+<p class="tool-hint">Enter any Overworld coordinate — even far outside the current grid — and this tells you where the nearest portal in the network would go if you built the grid out that far.</p>
+<input id="slotX" type="number" placeholder="Overworld X">
+<input id="slotZ" type="number" placeholder="Overworld Z">
+<button id="slotBtn" type="button">Find Nearest Slot</button>
+<p id="slotStatus" class="tool-status"></p>
+<div id="slotResult" class="tool-result"></div>
+</div>
+
+</section>
+
+
 <section id="output">
 
 <h2>&nbsp;</h2>
