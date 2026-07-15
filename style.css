@@ -149,7 +149,7 @@ button:hover {
 
 .portal-frame {
     width: 140px;
-    height: 220px;
+    height: 235px;
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+CjxyZWN0IHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgZmlsbD0iIzE1MGEyMCIvPgo8cG9seWdvbiBwb2ludHM9IjAsMCAxNCwyIDEwLDE0IDAsMTYiIGZpbGw9IiMxYjEwMjYiLz4KPHBvbHlnb24gcG9pbnRzPSIxNCwyIDMwLDAgMzIsMTIgMTgsMTYgMTAsMTQiIGZpbGw9IiMwZDA3MTQiLz4KPHBvbHlnb24gcG9pbnRzPSIzMiwxMiA0OCwxMCA0OCwyNCAzNCwyNiAxOCwxNiIgZmlsbD0iIzI0MTAzMyIvPgo8cG9seWdvbiBwb2ludHM9IjAsMTYgMTAsMTQgMTgsMTYgMTQsMzAgMCwzMiIgZmlsbD0iIzBkMDcxNCIvPgo8cG9seWdvbiBwb2ludHM9IjE4LDE2IDM0LDI2IDMwLDQwIDE0LDMwIiBmaWxsPSIjMWIxMDI2Ii8+Cjxwb2x5Z29uIHBvaW50cz0iMzQsMjYgNDgsMjQgNDgsNDAgMzAsNDAiIGZpbGw9IiMwZDA3MTQiLz4KPHBvbHlnb24gcG9pbnRzPSIwLDMyIDE0LDMwIDEyLDQ4IDAsNDgiIGZpbGw9IiMyNDEwMzMiLz4KPHBvbHlnb24gcG9pbnRzPSIxNCwzMCAzMCw0MCAyNiw0OCAxMiw0OCIgZmlsbD0iIzBkMDcxNCIvPgo8cG9seWdvbiBwb2ludHM9IjMwLDQwIDQ4LDQwIDQ4LDQ4IDI2LDQ4IiBmaWxsPSIjMWIxMDI2Ii8+CjxjaXJjbGUgY3g9IjkiIGN5PSI5IiByPSIxLjQiIGZpbGw9IiMzZDFhNWMiLz4KPGNpcmNsZSBjeD0iMzgiIGN5PSIxNyIgcj0iMS4xIiBmaWxsPSIjM2QxYTVjIi8+CjxjaXJjbGUgY3g9IjIyIiBjeT0iMzQiIHI9IjEuMyIgZmlsbD0iIzNkMWE1YyIvPgo8Y2lyY2xlIGN4PSI0MSIgY3k9IjQ0IiByPSIxIiBmaWxsPSIjM2QxYTVjIi8+Cjwvc3ZnPg==");
     background-size: 48px 48px;
     background-repeat: repeat;
@@ -201,7 +201,7 @@ button:hover {
 
 .portal-center {
     width: 100px;
-    height: 180px;
+    height: 195px;
     background: radial-gradient(circle at 50% 50%, #7b2cff 0%, #3F1187 100%);
     border-radius: 3px;
     display: flex;
@@ -339,14 +339,20 @@ body.mobile-mode .portal-card {
 
 body.mobile-mode .portal-frame {
     width: 90px;
-    height: 140px;
+    height: 150px;
     background-size: 32px 32px;
 }
 
 body.mobile-mode .portal-center {
     width: 66px;
-    height: 116px;
+    height: 126px;
     padding-top: 8px;
+}
+
+body.mobile-mode .copy-btn {
+    font-size: 8px;
+    padding: 2px 6px;
+    margin-top: 4px;
 }
 
 body.mobile-mode .portal-name {
@@ -357,4 +363,113 @@ body.mobile-mode .portal-name {
 body.mobile-mode .portal-coords {
     font-size: 10px;
     line-height: 13px;
+}
+
+/* Tools card */
+
+.tools-card {
+    width: min(90%, 450px);
+    margin: 20px auto 0;
+}
+
+.tool-block {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(123, 44, 255, .3);
+}
+
+.tool-block:first-of-type {
+    margin-top: 10px;
+    padding-top: 0;
+    border-top: none;
+}
+
+.tool-block h3 {
+    color: #e4c8ff;
+    font-size: 16px;
+    margin: 0 0 8px;
+}
+
+.tool-hint {
+    color: #b39ddb;
+    font-size: 12px;
+    margin: 0 0 10px;
+    line-height: 1.4;
+}
+
+.tool-block input {
+    margin-top: 8px;
+}
+
+.tool-block button {
+    margin-top: 12px;
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    background: linear-gradient(90deg, #7b2cff, #c86cff);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.tool-block button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 12px #c86cff;
+}
+
+.coord-pair {
+    display: flex;
+    gap: 10px;
+}
+
+.coord-pair input {
+    width: 50%;
+}
+
+.tool-status {
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+.tool-result {
+    margin-top: 10px;
+    padding: 12px;
+    background: rgba(0, 0, 0, .3);
+    border: 1px solid #7b2cff;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #e4c8ff;
+}
+
+/* Per-portal copy button */
+
+.copy-btn {
+    margin-top: 8px;
+    padding: 3px 10px;
+    font-size: 10px;
+    background: rgba(255, 255, 255, .15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, .4);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.copy-btn:hover {
+    background: rgba(255, 255, 255, .3);
+}
+
+/* Highlighted portal (search / nearest-portal result) */
+
+@keyframes highlight-pulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(0, 0, 0, .6); }
+    50% { box-shadow: 0 0 30px 10px rgba(255, 213, 74, .9); }
+}
+
+.portal-card.highlighted-portal .portal-frame {
+    animation: highlight-pulse .8s ease-in-out 3;
 }
