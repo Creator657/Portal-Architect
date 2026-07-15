@@ -13,7 +13,6 @@ function getCountFromResponse(response) {
     }
 
     if (response.ok) {
-        // No Link header means there's only one page of results, i.e. one item.
         return 1;
     }
 
@@ -73,15 +72,37 @@ Promise.all([
         });
     });
 
-const button = document.getElementById("generateBtn");
-const errorEl = document.getElementById("formError");
-const noticeEl = document.getElementById("radiusNotice");
-
 const mobileToggle = document.getElementById("mobileToggle");
 
 mobileToggle.addEventListener("change", function () {
     document.body.classList.toggle("mobile-mode", mobileToggle.checked);
 });
+
+// --- Element references --------------------------------------------------
+
+const motherXInput = document.getElementById("motherX");
+const motherZInput = document.getElementById("motherZ");
+const radiusField = document.getElementById("radius");
+const generateBtn = document.getElementById("generateBtn");
+const editCoordsBtn = document.getElementById("editCoordsBtn");
+const errorEl = document.getElementById("formError");
+const noticeEl = document.getElementById("radiusNotice");
+
+const loadingContainer = document.getElementById("loadingContainer");
+const progressFill = document.getElementById("progressFill");
+const progressLabel = document.getElementById("progressLabel");
+const progressCount = document.getElementById("progressCount");
+const loadingStatus = document.getElementById("loadingStatus");
+
+const toolsSection = document.getElementById("toolsSection");
+const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
+const tabPanels = {
+    grid: document.getElementById("panel-grid"),
+    search: document.getElementById("panel-search"),
+    nearest: document.getElementById("panel-nearest"),
+    distance: document.getElementById("panel-distance"),
+    slot: document.getElementById("panel-slot")
+};
 
 function showError(message) {
     errorEl.textContent = message;
@@ -91,36 +112,13 @@ function showNotice(message) {
     noticeEl.textContent = message;
 }
 
-const radiusField = document.getElementById("radius");
+function sleep(ms) {
+    return new Promise(function (resolve) {
+        setTimeout(resolve, ms);
+    });
+}
 
-radiusField.addEventListener("input", function () {
-    const rawValue = radiusField.value.trim();
-
-    if (rawValue === "") {
-        noticeEl.textContent = "";
-        return;
-    }
-
-    const numericValue = Number(rawValue);
-
-    if (Number.isNaN(numericValue)) {
-        noticeEl.textContent = "";
-        return;
-    }
-
-    const truncated = Math.trunc(numericValue);
-
-    if (truncated !== numericValue) {
-        showNotice("Rounding radius to " + truncated + ".");
-    } else {
-        noticeEl.textContent = "";
-    }
-});
-
-// --- Shared grid math -------------------------------------------------
-// These mirror the exact math used when the grid is generated, so every
-// tool below (search, nearest-portal, slot finder) stays consistent with
-// what's actually drawn on screen.
+// --- Shared grid math -----------------------------------------------------
 
 function getPortalName(x, z) {
     if (x === 0 && z === 0) {
@@ -134,14 +132,11 @@ function getPortalName(x, z) {
     return name;
 }
 
-// The Mother Portal's anchor point. Set every time Generate Grid succeeds.
-// Tools that need to measure against the grid (nearest portal, slot finder)
-// read from here instead of recalculating, since only the Mother Portal
-// has an "exact" Overworld coordinate — everything else is derived from it.
+// The Mother Portal's anchor point, set once Generate succeeds and locked
+// until Edit Coordinates is used. Tools read from here to stay consistent
+// with what's actually on screen.
 let motherAnchor = null; // { netherX, netherZ, overworldX, overworldZ, radius }
 
-// Given any Overworld X/Z, find the closest point in the portal lattice,
-// even if that point falls outside the currently generated radius.
 function findNearestLatticePoint(targetOverworldX, targetOverworldZ) {
     const targetNetherX = targetOverworldX / 8;
     const targetNetherZ = targetOverworldZ / 8;
@@ -187,60 +182,43 @@ function findCardByOffset(x, z) {
     }) || null;
 }
 
-// --- Grid generation ----------------------------------------------------
+// --- Tab switching ---------------------------------------------------------
 
-button.addEventListener("click", function () {
+function activateTab(tabName) {
+    tabButtons.forEach(function (btn) {
+        btn.classList.toggle("active", btn.dataset.tab === tabName);
+    });
+    Object.keys(tabPanels).forEach(function (key) {
+        tabPanels[key].hidden = key !== tabName;
+    });
+}
 
-    errorEl.textContent = "";
-    noticeEl.textContent = "";
+tabButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+        activateTab(btn.dataset.tab);
+    });
+});
 
-    const overworldXInput = document.getElementById("motherX").value.trim();
-    const overworldZInput = document.getElementById("motherZ").value.trim();
-    const radiusInput = document.getElementById("radius").value.trim();
+// --- Progress bar helpers ---------------------------------------------------
 
-    if (overworldXInput === "" || overworldZInput === "" || radiusInput === "") {
-        showError("Please fill in Overworld X, Overworld Z, and Grid Radius.");
-        return;
-    }
+function updateProgress(loaded, total, label) {
+    const percent = Math.round((loaded / total) * 100);
+    progressFill.style.width = percent + "%";
+    progressLabel.textContent = label;
+    progressCount.textContent = loaded + " / " + total + " items loaded (" + percent + "%)";
+}
 
-    const overworldX = Number(overworldXInput);
-    const overworldZ = Number(overworldZInput);
-    let radius = Number(radiusInput);
+function resetLoadingUI() {
+    progressFill.style.width = "0%";
+    progressLabel.textContent = "";
+    progressCount.textContent = "";
+    loadingStatus.textContent = "";
+    loadingStatus.style.color = "#8a6fa8";
+}
 
-    if (Number.isNaN(overworldX) || Number.isNaN(overworldZ) || Number.isNaN(radius)) {
-        showError("Coordinates and radius must be numbers.");
-        return;
-    }
+// --- Grid building (actual DOM work, called partway through the sequence) --
 
-    const truncatedRadius = Math.trunc(radius);
-
-    if (truncatedRadius !== radius) {
-        showNotice("Rounding radius to " + truncatedRadius + ".");
-    }
-
-    radius = truncatedRadius;
-
-    if (radius < 1) {
-        showError("Grid radius must be at least 1.");
-        return;
-    }
-
-    if (radius > 15) {
-        showError("Maximum grid radius is 15 for performance.");
-        return;
-    }
-
-    const netherX = Math.round(overworldX / 8);
-    const netherZ = Math.round(overworldZ / 8);
-
-    motherAnchor = {
-        netherX: netherX,
-        netherZ: netherZ,
-        overworldX: overworldX,
-        overworldZ: overworldZ,
-        radius: radius
-    };
-
+function buildGrid(overworldX, overworldZ, radius, netherX, netherZ) {
     const results = document.getElementById("results");
     results.innerHTML = "";
 
@@ -268,11 +246,6 @@ button.addEventListener("click", function () {
             const portalNetherX = netherX + (x * 35);
             const portalNetherZ = netherZ + (z * 40);
 
-            // The Mother Portal echoes back the exact Overworld coordinates you
-            // typed in — it is never recalculated. Its Nether line still shows
-            // the rounded value used to anchor the grid. Every other portal only
-            // exists in Nether space, so its Overworld line is calculated back
-            // (Nether x 8) since there's no original input to preserve for it.
             const portalOverworldX = isCenter ? overworldX : Math.round(portalNetherX * 8);
             const portalOverworldZ = isCenter ? overworldZ : Math.round(portalNetherZ * 8);
 
@@ -343,6 +316,171 @@ button.addEventListener("click", function () {
 
         results.appendChild(row);
     }
+}
+
+// --- Lock / unlock the Mother Portal card -----------------------------------
+
+function lockMotherCard() {
+    motherXInput.disabled = true;
+    motherZInput.disabled = true;
+    radiusField.disabled = true;
+    generateBtn.style.display = "none";
+    editCoordsBtn.style.display = "block";
+}
+
+function unlockMotherCard() {
+    motherXInput.disabled = false;
+    motherZInput.disabled = false;
+    radiusField.disabled = false;
+    generateBtn.style.display = "block";
+    editCoordsBtn.style.display = "none";
+}
+
+editCoordsBtn.addEventListener("click", function () {
+    unlockMotherCard();
+    motherAnchor = null;
+    toolsSection.style.display = "none";
+    loadingContainer.style.display = "none";
+    resetLoadingUI();
+    document.getElementById("results").innerHTML = "";
+    activateTab("grid");
+    errorEl.textContent = "";
+    noticeEl.textContent = "";
+});
+
+// --- Radius live rounding notice ---------------------------------------------
+
+radiusField.addEventListener("input", function () {
+    const rawValue = radiusField.value.trim();
+
+    if (rawValue === "") {
+        noticeEl.textContent = "";
+        return;
+    }
+
+    const numericValue = Number(rawValue);
+
+    if (Number.isNaN(numericValue)) {
+        noticeEl.textContent = "";
+        return;
+    }
+
+    const truncated = Math.trunc(numericValue);
+
+    if (truncated !== numericValue) {
+        showNotice("Rounding radius to " + truncated + ".");
+    } else {
+        noticeEl.textContent = "";
+    }
+});
+
+// --- Generate: validate, then run the staged loading sequence ----------------
+
+generateBtn.addEventListener("click", async function () {
+
+    errorEl.textContent = "";
+    noticeEl.textContent = "";
+
+    const overworldXInput = motherXInput.value.trim();
+    const overworldZInput = motherZInput.value.trim();
+    const radiusInput = radiusField.value.trim();
+
+    if (overworldXInput === "" || overworldZInput === "" || radiusInput === "") {
+        showError("Please fill in Overworld X, Overworld Z, and Grid Radius.");
+        return;
+    }
+
+    const overworldX = Number(overworldXInput);
+    const overworldZ = Number(overworldZInput);
+    let radius = Number(radiusInput);
+
+    if (Number.isNaN(overworldX) || Number.isNaN(overworldZ) || Number.isNaN(radius)) {
+        showError("Coordinates and radius must be numbers.");
+        return;
+    }
+
+    const truncatedRadius = Math.trunc(radius);
+
+    if (truncatedRadius !== radius) {
+        showNotice("Rounding radius to " + truncatedRadius + ".");
+    }
+
+    radius = truncatedRadius;
+
+    if (radius < 1) {
+        showError("Grid radius must be at least 1.");
+        return;
+    }
+
+    if (radius > 15) {
+        showError("Maximum grid radius is 15 for performance.");
+        return;
+    }
+
+    generateBtn.disabled = true;
+    loadingContainer.style.display = "block";
+    resetLoadingUI();
+
+    const netherX = Math.round(overworldX / 8);
+    const netherZ = Math.round(overworldZ / 8);
+
+    const totalPortals = (2 * radius + 1) * (2 * radius + 1);
+    const totalItems = totalPortals + 4; // + Search, Nearest, Distance, Slot Finder
+    let itemsLoaded = 0;
+
+    try {
+        updateProgress(itemsLoaded, totalItems, "Calculating Mother Portal anchor...");
+        await sleep(250);
+
+        updateProgress(itemsLoaded, totalItems, "Generating " + totalPortals + " portals...");
+        await sleep(300);
+
+        buildGrid(overworldX, overworldZ, radius, netherX, netherZ);
+
+        itemsLoaded += totalPortals;
+        updateProgress(itemsLoaded, totalItems, totalPortals + " portals generated.");
+        await sleep(200);
+
+        itemsLoaded += 1;
+        updateProgress(itemsLoaded, totalItems, "Loading Search tool...");
+        await sleep(200);
+
+        itemsLoaded += 1;
+        updateProgress(itemsLoaded, totalItems, "Loading Highlight Nearest tool...");
+        await sleep(200);
+
+        itemsLoaded += 1;
+        updateProgress(itemsLoaded, totalItems, "Loading Distance Calculator...");
+        await sleep(200);
+
+        itemsLoaded += 1;
+        updateProgress(itemsLoaded, totalItems, "Loading Slot Finder...");
+        await sleep(200);
+
+        motherAnchor = {
+            netherX: netherX,
+            netherZ: netherZ,
+            overworldX: overworldX,
+            overworldZ: overworldZ,
+            radius: radius
+        };
+
+        loadingStatus.textContent = "Success — all tools loaded.";
+        loadingStatus.style.color = "#8a6fa8";
+
+        lockMotherCard();
+        toolsSection.style.display = "block";
+        activateTab("grid");
+
+    } catch (err) {
+        loadingStatus.textContent = "Failed to generate the grid. Please try again.";
+        loadingStatus.style.color = "#ff8a8a";
+        motherAnchor = null;
+        toolsSection.style.display = "none";
+        console.error("Grid generation failed:", err);
+    } finally {
+        generateBtn.disabled = false;
+    }
 });
 
 // --- Tool 1: Search portal by name --------------------------------------
@@ -370,6 +508,7 @@ searchNameBtn.addEventListener("click", function () {
         return;
     }
 
+    activateTab("grid");
     highlightCard(card);
     searchStatus.style.color = "#8a6fa8";
     searchStatus.textContent = "Found " + query + ".";
@@ -413,6 +552,7 @@ nearestBtn.addEventListener("click", function () {
     const card = findCardByOffset(nearest.x, nearest.z);
 
     if (card) {
+        activateTab("grid");
         highlightCard(card);
         nearestStatus.style.color = "#8a6fa8";
         nearestStatus.textContent = "Nearest portal is " + nearest.name + ".";
@@ -421,7 +561,7 @@ nearestBtn.addEventListener("click", function () {
 
     nearestStatus.style.color = "#ffd54a";
     nearestStatus.textContent = "Nearest portal (" + nearest.name + ") isn't in the current grid — it would sit at Overworld " +
-        nearest.overworldX + ", " + nearest.overworldZ + ". Try a larger radius.";
+        nearest.overworldX + ", " + nearest.overworldZ + ". Edit coordinates with a larger radius to include it.";
 });
 
 // --- Tool 3: Distance calculator (any two points) -----------------------
