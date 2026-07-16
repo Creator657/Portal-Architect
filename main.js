@@ -78,21 +78,46 @@ mobileToggle.addEventListener("change", function () {
     document.body.classList.toggle("mobile-mode", mobileToggle.checked);
 });
 
-const themeButtons = Array.from(document.querySelectorAll(".theme-btn"));
+const themeMenuBtn = document.getElementById("themeMenuBtn");
+const themeMenu = document.getElementById("themeMenu");
+const themeMenuItems = Array.from(document.querySelectorAll(".theme-menu-item"));
 
-themeButtons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-        themeButtons.forEach(function (b) {
-            b.classList.remove("active");
+function closeThemeMenu() {
+    themeMenu.hidden = true;
+    themeMenuBtn.setAttribute("aria-expanded", "false");
+}
+
+themeMenuBtn.addEventListener("click", function (event) {
+    event.stopPropagation();
+    const isOpen = !themeMenu.hidden;
+    if (isOpen) {
+        closeThemeMenu();
+    } else {
+        themeMenu.hidden = false;
+        themeMenuBtn.setAttribute("aria-expanded", "true");
+    }
+});
+
+themeMenuItems.forEach(function (item) {
+    item.addEventListener("click", function () {
+        themeMenuItems.forEach(function (i) {
+            i.classList.remove("active");
         });
-        btn.classList.add("active");
+        item.classList.add("active");
 
         document.body.classList.remove("theme-nether", "theme-overworld", "theme-deepdark");
-
-        if (btn.dataset.theme !== "nether") {
-            document.body.classList.add("theme-" + btn.dataset.theme);
+        if (item.dataset.theme !== "nether") {
+            document.body.classList.add("theme-" + item.dataset.theme);
         }
+
+        closeThemeMenu();
     });
+});
+
+document.addEventListener("click", function (event) {
+    if (!themeMenu.hidden && !themeMenu.contains(event.target) && event.target !== themeMenuBtn) {
+        closeThemeMenu();
+    }
 });
 
 // --- Element references --------------------------------------------------
@@ -139,7 +164,7 @@ function sleep(ms) {
 
 function getPortalName(x, z) {
     if (x === 0 && z === 0) {
-        return "★★★";
+        return "M";
     }
     let name = "";
     if (z > 0) name += "N" + z;
