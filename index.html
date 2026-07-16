@@ -30,13 +30,6 @@
     <span>Phone optimized view</span>
 </div>
 
-<div class="theme-row">
-    <span class="theme-label">Theme:</span>
-    <button type="button" class="theme-btn active" data-theme="nether">Nether</button>
-    <button type="button" class="theme-btn" data-theme="overworld">Overworld</button>
-    <button type="button" class="theme-btn" data-theme="deepdark">Deep Dark</button>
-</div>
-
 
 <main>
 
@@ -104,7 +97,7 @@ Edit Coordinates
 
 <div class="tab-panel" id="panel-search" hidden>
     <h3>Search Portal by Name</h3>
-    <input id="searchNameInput" type="text" placeholder="e.g. N3E2 or ★★★">
+    <input id="searchNameInput" type="text" placeholder="e.g. N3E2 or M">
     <button id="searchNameBtn" class="tool-btn" type="button">Find</button>
     <p id="searchStatus" class="tool-status"></p>
 </div>
@@ -150,7 +143,15 @@ Edit Coordinates
 
 <footer id="commitFooter" style="text-align:center; padding:20px; color:#8a6fa8; font-size:13px;"></footer>
 
-<button id="globalCopyBtn" class="global-copy-btn" type="button" disabled title="Select a portal first">📋</button>
+<button id="globalCopyBtn" class="fab" type="button" disabled title="Select a portal first">📋</button>
+
+<button id="themeMenuBtn" class="fab theme-menu-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Change theme">🖌️</button>
+
+<div id="themeMenu" class="theme-menu" hidden>
+    <button type="button" class="theme-menu-item active" data-theme="nether">Nether</button>
+    <button type="button" class="theme-menu-item" data-theme="overworld">Overworld</button>
+    <button type="button" class="theme-menu-item" data-theme="deepdark">Deep Dark</button>
+</div>
 
 
 <script src="main.js"></script>
